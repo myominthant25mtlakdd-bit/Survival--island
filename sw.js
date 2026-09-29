@@ -1,11 +1,13 @@
-const CACHE_NAME = "survival-island-v1";
+const CACHE_NAME = "survival-island-v2";
 
 const FILES_TO_CACHE = [
     "./",
     "./index.html",
     "./style.css",
     "./game.js",
-    "./manifest.json"
+    "./manifest.json",
+    "./icon-192.png",
+    "./icon-512.png"
 ];
 
 self.addEventListener("install", event => {
@@ -35,6 +37,7 @@ self.addEventListener("activate", event => {
             );
 
         })
+
     );
 
     self.clients.claim();
@@ -71,17 +74,26 @@ self.addEventListener("fetch", event => {
 
                         caches.open(CACHE_NAME)
                             .then(cache => {
+
                                 cache.put(
                                     event.request,
                                     copy
                                 );
+
                             });
 
                         return response;
+
                     })
-                    .catch(() =>
-                        caches.match("./index.html")
-                    );
+                    .catch(() => {
+
+                        return caches.match(
+                            "./index.html"
+                        );
+
+                    });
+
             })
+
     );
 });
