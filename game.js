@@ -2035,18 +2035,18 @@ if (joystick) {
 
     function releaseJoystick() {
 
-        joyActive = false;
-        joyPointer = null;
+    joyActive = false;
+    joyPointer = null;
 
-        state.moving = false;
-        state.dirX = 0;
-        state.dirY = 0;
+    state.moving = false;
+    state.dirX = 0;
+    state.dirY = 0;
 
-        if (stick) {
-            stick.style.transform =
-                "translate(0,0)";
-        }
+    if (stick) {
+        stick.style.transform =
+            "translate(0px, 0px)";
     }
+}
 
     joystick.addEventListener(
         "pointerup",
@@ -2181,52 +2181,60 @@ window.addEventListener(
 
 function keyboardMovement() {
 
+    /* Joystick is already controlling the player */
+    if (joyActive) {
+        return;
+    }
+
+    let dx = 0;
+    let dy = 0;
+
     if (
         keys["w"] ||
         keys["arrowup"]
     ) {
-        state.dirY = -1;
-    } else if (
+        dy -= 1;
+    }
+
+    if (
         keys["s"] ||
         keys["arrowdown"]
     ) {
-        state.dirY = 1;
-    } else {
-        state.dirY = 0;
+        dy += 1;
     }
 
     if (
         keys["a"] ||
         keys["arrowleft"]
     ) {
-        state.dirX = -1;
-    } else if (
-        keys["d"] ||
-        keys["arrowright"]
-    ) {
-        state.dirX = 1;
-    } else {
-        state.dirX = 0;
+        dx -= 1;
     }
 
     if (
-        state.dirX !== 0 ||
-        state.dirY !== 0
+        keys["d"] ||
+        keys["arrowright"]
     ) {
-        const len =
-            Math.hypot(
-                state.dirX,
-                state.dirY
-            );
+        dx += 1;
+    }
 
-        state.dirX /= len;
-        state.dirY /= len;
+    if (dx !== 0 || dy !== 0) {
+
+        const len = Math.hypot(dx, dy);
+
+        state.dirX = dx / len;
+        state.dirY = dy / len;
 
         state.moving = true;
+
+    } else {
+
+        state.dirX = 0;
+        state.dirY = 0;
+
+        state.moving = false;
     }
 }
-
-/* ---------------------------------------------------------
+--------------------------------------------------------
    Time display
 --------------------------------------------------------- */
 
