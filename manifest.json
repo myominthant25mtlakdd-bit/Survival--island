@@ -1,14 +1,28 @@
 {
   "name": "Survival Island",
   "short_name": "Survival Island",
+  "description": "A pixel art survival adventure on a mysterious island.",
   "start_url": "./",
   "scope": "./",
-  "display": "fullscreen",
+  "display": "standalone",
   "orientation": "landscape",
-  "background_color": "#3791be",
+  "background_color": "#163f52",
   "theme_color": "#246b35",
+  "lang": "en",
+  "categories": [
+    "games",
+    "entertainment"
+  ],
   "icons": [
-    {"src":"icons/icon-192.png","sizes":"192x192","type":"image/png"},
-    {"src":"icons/icon-512.png","sizes":"512x512","type":"image/png"}
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
   ]
 }
