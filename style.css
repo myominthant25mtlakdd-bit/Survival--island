@@ -1,1 +1,416 @@
-*{box-sizing:border-box}html,body{margin:0;width:100%;height:100%;overflow:hidden;background:#3791be;font-family:monospace;touch-action:none}canvas{display:block;width:100%;height:100%}#hud{position:fixed;left:10px;top:10px;padding:10px 14px;background:#2229;color:white;text-shadow:2px 2px #222;font-size:14px;line-height:1.6;pointer-events:none}#stats{display:block}#buttons{position:fixed;right:8px;bottom:12px;width:178px;text-align:center}#buttons button{width:76px;height:58px;margin:3px;border:1px solid #ffffff66;border-radius:14px;background:#222b;color:white;font-weight:bold;font-family:monospace;font-size:13px}#joystick{position:fixed;left:22px;bottom:22px;width:135px;height:135px;border-radius:50%;background:#7778;border:2px solid #fff5}#stick{position:absolute;left:42px;top:42px;width:49px;height:49px;border-radius:50%;background:#ddd9;border:2px solid #fff}#message{position:fixed;left:50%;top:45%;transform:translate(-50%,-50%);color:white;font-size:28px;text-shadow:2px 2px #222;pointer-events:none;text-align:center}.ending{position:fixed;inset:0;background:#000c;color:white;display:flex;align-items:center;justify-content:center;text-align:center;font-size:32px;z-index:5}
+* {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+}
+
+html,
+body {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    background: #163f52;
+    font-family: monospace;
+    image-rendering: pixelated;
+    user-select: none;
+    touch-action: none;
+}
+
+body {
+    position: fixed;
+}
+
+/* =========================
+   GAME CANVAS
+========================= */
+
+#game {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+    image-rendering: pixelated;
+}
+
+/* =========================
+   PIXEL FRAME
+========================= */
+
+.pixel-frame {
+    position: relative;
+    border: 4px solid #3b2417;
+    background: #e8c879;
+    box-shadow:
+        4px 4px 0 #24150f,
+        inset 0 0 0 3px #fff0a8,
+        inset 0 0 0 6px #9b632e;
+    image-rendering: pixelated;
+}
+
+/* Pixel corners */
+
+.pixel-frame::before,
+.pixel-frame::after {
+    content: "";
+    position: absolute;
+    width: 7px;
+    height: 7px;
+    background: #fff0a8;
+    pointer-events: none;
+}
+
+.pixel-frame::before {
+    left: 3px;
+    top: 3px;
+}
+
+.pixel-frame::after {
+    right: 3px;
+    bottom: 3px;
+}
+
+/* =========================
+   HUD
+========================= */
+
+#hud {
+    position: fixed;
+    top: 12px;
+    left: 12px;
+
+    min-width: 280px;
+    max-width: calc(100vw - 24px);
+
+    padding: 8px 12px;
+
+    z-index: 20;
+
+    color: #352016;
+    text-shadow: 2px 2px 0 #f6df91;
+}
+
+.game-title {
+    font-size: 17px;
+    font-weight: 900;
+    letter-spacing: 2px;
+    line-height: 22px;
+}
+
+.stats {
+    margin-top: 5px;
+
+    font-size: 11px;
+    line-height: 17px;
+
+    white-space: normal;
+}
+
+/* =========================
+   JOYSTICK
+========================= */
+
+#joystick {
+    position: fixed;
+
+    left: 22px;
+    bottom: 24px;
+
+    width: 138px;
+    height: 138px;
+
+    border-radius: 0;
+
+    background:
+        rgba(45, 38, 27, 0.48);
+
+    border: 5px solid #332219;
+
+    box-shadow:
+        5px 5px 0 rgba(20, 15, 10, 0.65),
+        inset 0 0 0 4px rgba(255, 230, 150, 0.5),
+        inset 0 0 0 8px rgba(80, 50, 25, 0.7);
+
+    z-index: 30;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    touch-action: none;
+}
+
+/* Joystick inner pixel rings */
+
+#joystick::before {
+    content: "";
+
+    position: absolute;
+
+    width: 88px;
+    height: 88px;
+
+    border: 3px solid rgba(255, 235, 170, 0.4);
+
+    box-shadow:
+        inset 0 0 0 3px rgba(30, 25, 20, 0.4);
+}
+
+/* Stick */
+
+#stick {
+    position: absolute;
+
+    width: 58px;
+    height: 58px;
+
+    background: #8d5b31;
+
+    border: 4px solid #3a2518;
+
+    box-shadow:
+        4px 4px 0 #21140e,
+        inset 0 0 0 3px #c58a4b;
+
+    transform: translate(0, 0);
+
+    pointer-events: none;
+}
+
+/* =========================
+   ACTION BUTTONS
+========================= */
+
+#buttons {
+    position: fixed;
+
+    right: 15px;
+    bottom: 20px;
+
+    display: grid;
+
+    grid-template-columns: repeat(2, 86px);
+
+    gap: 10px;
+
+    z-index: 30;
+}
+
+/* Pixel button */
+
+.pixel-button {
+    appearance: none;
+
+    min-height: 52px;
+
+    border: 4px solid #3a2418;
+
+    background: #d99b4e;
+
+    color: #321d12;
+
+    font-family: monospace;
+    font-size: 12px;
+    font-weight: 900;
+
+    letter-spacing: 1px;
+
+    box-shadow:
+        4px 4px 0 #21140e,
+        inset 0 0 0 3px #f4d47d,
+        inset 0 0 0 6px #955d2c;
+
+    text-shadow:
+        1px 1px 0 #f8dda0;
+
+    cursor: pointer;
+
+    touch-action: manipulation;
+}
+
+.pixel-button:active {
+    transform: translate(3px, 3px);
+
+    box-shadow:
+        1px 1px 0 #21140e,
+        inset 0 0 0 3px #f4d47d,
+        inset 0 0 0 6px #955d2c;
+}
+
+/* =========================
+   MESSAGE BOX
+========================= */
+
+#message {
+    position: fixed;
+
+    left: 50%;
+    bottom: 190px;
+
+    transform: translateX(-50%);
+
+    min-width: 190px;
+    max-width: calc(100vw - 40px);
+
+    min-height: 48px;
+
+    padding: 12px 18px;
+
+    z-index: 40;
+
+    text-align: center;
+
+    color: #332016;
+
+    font-size: 13px;
+    font-weight: 900;
+
+    line-height: 20px;
+
+    pointer-events: none;
+
+    opacity: 0;
+
+    transition:
+        opacity 0.12s linear;
+}
+
+/*
+   Message appears when text exists
+*/
+
+#message:not(:empty) {
+    opacity: 1;
+}
+
+/* =========================
+   ENDING MESSAGE
+========================= */
+
+#message.ending {
+    top: 50%;
+    bottom: auto;
+
+    min-width: 270px;
+
+    transform: translate(-50%, -50%);
+
+    padding: 22px;
+
+    font-size: 22px;
+
+    letter-spacing: 2px;
+
+    opacity: 1;
+
+    box-shadow:
+        6px 6px 0 #21140e,
+        inset 0 0 0 4px #fff0a8,
+        inset 0 0 0 8px #9b632e;
+}
+
+/* =========================
+   SMALL PHONES
+========================= */
+
+@media (max-width: 420px) {
+
+    #hud {
+        top: 8px;
+        left: 8px;
+
+        min-width: 240px;
+
+        padding: 6px 9px;
+    }
+
+    .game-title {
+        font-size: 14px;
+        letter-spacing: 1px;
+    }
+
+    .stats {
+        font-size: 9px;
+        line-height: 14px;
+    }
+
+    #joystick {
+        width: 120px;
+        height: 120px;
+
+        left: 14px;
+        bottom: 15px;
+    }
+
+    #stick {
+        width: 52px;
+        height: 52px;
+    }
+
+    #buttons {
+        right: 10px;
+        bottom: 13px;
+
+        grid-template-columns:
+            repeat(2, 75px);
+
+        gap: 7px;
+    }
+
+    .pixel-button {
+        min-height: 46px;
+
+        font-size: 10px;
+    }
+
+    #message {
+        bottom: 165px;
+
+        font-size: 11px;
+    }
+}
+
+/* =========================
+   LANDSCAPE
+========================= */
+
+@media (orientation: landscape) and (max-height: 500px) {
+
+    #hud {
+        top: 7px;
+        left: 8px;
+    }
+
+    #joystick {
+        bottom: 12px;
+        left: 15px;
+
+        width: 105px;
+        height: 105px;
+    }
+
+    #stick {
+        width: 45px;
+        height: 45px;
+    }
+
+    #buttons {
+        bottom: 10px;
+        right: 12px;
+
+        grid-template-columns:
+            repeat(2, 70px);
+
+        gap: 6px;
+    }
+
+    .pixel-button {
+        min-height: 40px;
+        font-size: 9px;
+    }
+
+    #message {
+        bottom: 130px;
+    }
+}
